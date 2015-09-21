@@ -31,8 +31,13 @@ class StructureController extends BaseController
         $structures = Structure::get();
 
         foreach ($structures as $key=>$struct) {
-            $lang = StructureLang::where(['structure_id'=>$struct['id'],'language_id'=>\Lang::getLocale()])->first();
-            $structures[$key]->name = $lang->name;
+            $lang = StructureLang::where(['structure_id'=>$struct['id'],'language_id'=>\LaravelLocalization::getCurrentLocale()])->first();
+            if($lang){
+                $structures[$key]->name = $lang->name;
+            }else{
+                unset($structures[$key]);
+            }
+
         }
 
         $structures->linkNodes();

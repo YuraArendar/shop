@@ -4,7 +4,7 @@
 
     <!-- Basic -->
     <meta charset="UTF-8">
-
+    <meta http-equiv="Content-Language" content="{{ LaravelLocalization::getCurrentLocale() }}">
     <title>Default Layout | Porto Admin - Responsive HTML5 Template 1.4.1</title>
     <meta name="keywords" content="HTML5 Admin Template" />
     <meta name="description" content="Porto Admin - Responsive HTML5 Template">
