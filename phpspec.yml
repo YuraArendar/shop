@@ -1,0 +1,5 @@
+suites:
+    main:
+        namespace: shop
+        psr4_prefix: shop
+        src_path: app
