@@ -16,7 +16,23 @@ Theme Version: 	1.4.1
 			output = list.data('output');
 
 		if (window.JSON) {
-			output.val(window.JSON.stringify(list.nestable('serialize')));
+			var data =  window.JSON.stringify(list.nestable('serialize'));
+			var token = $('meta[name="csrf_token"]').attr('content');
+
+			var lang = $('meta[http-equiv="Content-Language"]').attr('content');
+
+			$.ajax({
+				url: '/'+lang+'/cms/structure/rebuild',
+				method:"POST",
+				data: {
+					_token : token,
+					data : data
+				},
+				success: function (res) {
+
+				}
+
+			});
 		} else {
 			output.val('JSON browser support required for this demo.');
 		}
