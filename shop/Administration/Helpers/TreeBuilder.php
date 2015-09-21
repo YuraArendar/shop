@@ -34,12 +34,16 @@ class TreeBuilder{
                 $template = explode('{|}',$this->templateMulti);
                 $str = str_replace('{id}',$item['id'],$template[0]);
                 $str = str_replace('{name}',$item['name'],$str);
+                if(isset($item['link']))
+                    $str = str_replace('{link}',$item['link'],$str);
                 $this->treeHTML.= $str;
                 $this->move($item['children']);
                 $this->treeHTML .=$template[1];
             }else{
                 $str = str_replace('{id}',$item['id'],$this->templateSingle);
                 $str = str_replace('{name}',$item['name'],$str);
+                if(isset($item['link']))
+                    $str = str_replace('{link}',$item['link'],$str);
                 $this->treeHTML.= $str;
             }
         }

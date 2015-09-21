@@ -14,13 +14,10 @@
                 <div class="panel-body">
                     <div class="col-sm-6">
                         <div class="mb-md">
-                            {!! link_to_action('\Administration\Http\Controllers\StructureController@create','Add',array(),['class'=>'btn btn-primary']) !!}
+                            {!! link_to_action('\Administration\Http\Controllers\StructureController@create',"Add",array(),['class'=>'btn btn-primary']) !!}
 
                         </div>
                     </div>
-                    {!! Form::open(['method' => 'DELETE', 'id' => 'formDeleteProduct', 'action' => ['\Administration\Http\Controllers\StructureController@destroy', 4]]) !!}
-                    {!! Form::button( '<i class="fa fa-trash fa-lg"></i>', ['type' => 'submit', 'class' => 'delete text-danger deleteProduct','id' => 'btnDeleteProduct', 'data-id' => 4 ] ) !!}
-                    {!! Form::close() !!}
                     <div class="col-md-12">
                         <div class="dd" id="nestable">
 

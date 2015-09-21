@@ -7,6 +7,9 @@
 <link rel="stylesheet" href="/assets/cms/vendor/font-awesome/css/font-awesome.css" />
 <link rel="stylesheet" href="/assets/cms/vendor/magnific-popup/magnific-popup.css" />
 <link rel="stylesheet" href="/assets/cms/vendor/bootstrap-datepicker/css/datepicker3.css" />
+<link rel="stylesheet" href="/assets/cms/vendor/magnific-popup/magnific-popup.css" />
+<link rel="stylesheet" href="/assets/cms/vendor/pnotify/pnotify.custom.css" />
+
 
 <!-- Theme CSS -->
 <link rel="stylesheet" href="/assets/cms/stylesheets/theme.css" />

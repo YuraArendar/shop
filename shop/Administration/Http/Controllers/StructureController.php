@@ -34,6 +34,7 @@ class StructureController extends BaseController
             $lang = StructureLang::where(['structure_id'=>$struct['id'],'language_id'=>\LaravelLocalization::getCurrentLocale()])->first();
             if($lang){
                 $structures[$key]->name = $lang->name;
+                $structures[$key]->link = action('\Administration\Http\Controllers\StructureController@edit',['id'=>$struct['id']]);
             }else{
                 unset($structures[$key]);
             }
@@ -43,14 +44,14 @@ class StructureController extends BaseController
         $structures->linkNodes();
 
         $str =  $structures->toArray();
-        $editTemplate = '<span class="pull-right">'.
-            '<a href="#" class="on-default edit-row"><i class="fa fa-pencil"></i></a>'.
-            '<a href="'.action('\Administration\Http\Controllers\StructureController@destroy').'/{id}" class="on-default remove-row"><i class="fa fa-trash-o"></i></a></span>';
+        $editTemplate = '<span class="edit-buttons pull-right">'.
+            '<a href="{link}" style="z-index: 10000;" class="on-default edit-row"><i class="fa fa-pencil"></i></a>'.
+            '<a href="#" class="on-default remove-row"><i class="fa fa-trash-o"></i></a></span>';
         $view = $build->view(
             $str,
             '<ol class="dd-list">{val}</ol>',
-            '<li class="dd-item" data-id="{id}"><div class="dd-handle">{name}'.$editTemplate.'</div></li>',
-            '<li class="dd-item" data-id="{id}"><div class="dd-handle">{name}'.$editTemplate.'</div><ol class="dd-list">{|}</ol></li>'
+            '<li class="dd-item" data-id="{id}">'.$editTemplate.'<div class="dd-handle">{name}</div></li>',
+            '<li class="dd-item" data-id="{id}">'.$editTemplate.'<div class="dd-handle">{name}</div><ol class="dd-list">{|}</ol></li>'
             );
 
         $structures = Structure::all()->toArray();
@@ -169,7 +170,15 @@ class StructureController extends BaseController
      */
     public function destroy($id)
     {
-        //
+        Structure::where(['parent_id'=>$id])->delete();
+        $struct = Structure::find($id);
+        $struct->delete();
+        $message = [
+            'type'=>'succes',
+            'title'=> 'Deleted',
+            'message'=>'Structure was deleted'
+        ];
+        return $message ;
     }
 
 }

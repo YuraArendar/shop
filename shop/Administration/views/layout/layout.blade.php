@@ -18,8 +18,9 @@
     <!-- Head Libs -->
     <script src="/assets/cms/vendor/modernizr/modernizr.js"></script>
 </head>
-<body>
-<section class="body">
+
+<body >
+<section class="body" >
 
 
     <!-- start: header -->
@@ -33,9 +34,6 @@
         <section role="main" class="content-body">
             <header class="page-header">
                 <h2>{{ $partition }}</h2>
-
-
-                @include('administration::layout.inc.lang_filelds')
 
                 <div class="right-wrapper pull-right">
                     <ol class="breadcrumbs">
@@ -51,9 +49,7 @@
                     <a class="sidebar-right-toggle" data-open="sidebar-right"><i class="fa fa-chevron-left"></i></a>
                 </div>
             </header>
-
-
-
+            @include('administration::layout.inc.lang_filelds')
 
             <!-- start: page -->
 
