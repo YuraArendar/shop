@@ -14,10 +14,33 @@ use shop\StructureLang;
 class StructureController extends BaseController
 {
 
-    public function __construct(){
+    protected $validation;
+
+    public function __construct(Request $request){
         parent::__construct();
 
+
+
+
         view()->share('partition','Structure');
+        $structures = Structure::all()->toArray();
+        foreach ($structures as $key=>$struct) {
+            $lang = StructureLang::where(['structure_id'=>$struct['id'],'language_id'=>\Lang::getLocale()])->first();
+            if($lang){
+                $structures[$key]['name'] = $lang->name;
+            }else{
+                unset($structures[$key]);
+            }
+        }
+
+        $list = [
+            0 => 'Root'
+        ];
+        foreach($structures as $struct){
+            $list[$struct['id']] = $struct['name'];
+        }
+
+        view()->share('listStructures',$list);
     }
 
     /**
@@ -91,13 +114,7 @@ class StructureController extends BaseController
      */
     public function create()
     {
-        $structures = Structure::all();
-        foreach ($structures as $key=>$struct) {
-            $lang = StructureLang::where(['structure_id'=>$struct->id,'language_id'=>\Lang::getLocale()])->first();
-            $structures[$key]->name = $lang->name;
-        }
-
-        return view('administration::structure.create',compact('structures'));
+        return view('administration::structure.create');
 
     }
 
@@ -112,20 +129,20 @@ class StructureController extends BaseController
         $structure =  new Structure();
 
         $data = $request->all();
-       // dd($data);
+
         $structure->alias = $data['alias'];
         $structure->parent_id = $data['parent_id'];
         $structure->controller = $data['controller'];
 
 
-        $structure->save();
+        $id = $structure->save();
         $structure->structureLang()->create([
             'name'=>$data['name'],
             'language_id'=>$data['language_id'],
             'description'=>$data['description']
         ]);
-        return redirect()->back()->withInput();
-        //dd($request->all());
+
+        return redirect(action('\Administration\Http\Controllers\StructureController@edit',['id'=>$structure->id]))->withInput();
     }
 
     /**
@@ -147,7 +164,16 @@ class StructureController extends BaseController
      */
     public function edit($id)
     {
-        //
+        $structure = Structure::with('structureLang')->find($id)->toArray();
+
+        $lang = StructureLang::where('structure_id',$id)
+            ->where('language_id',\LaravelLocalization::getCurrentLocale())
+            ->first()
+            ->toArray();
+
+        $structure['lang'] = $lang;
+
+        return view('administration::structure.edit',compact('structure'));
     }
 
     /**
@@ -159,7 +185,33 @@ class StructureController extends BaseController
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validation = Validator::make($request->all(), [
+            'alias' => 'required|unique:structure|max:255',
+        ]);
+        $objectStructure = Structure::find($id);
+
+        $data = $request->all();
+
+        $objectStructure->alias = $data['alias'];
+        $objectStructure->parent_id = $data['parent_id'];
+        $objectStructure->controller = $data['controller'];
+
+        $langStructure =  StructureLang::where('structure_id',$id)
+            ->where('language_id',\LaravelLocalization::getCurrentLocale())
+            ->first();
+        $langStructure->name = $data['name'];
+        $langStructure->description = $data['description'];
+
+        $objectStructure->save();
+        $langStructure->save();
+        if($this->validation->fails()){
+            return $this->validation->errors();
+        }else{
+            return $this->validation->errors();
+        }
+        //return redirect()->back()->withInput();
+       // dd($data);
+        //$objectStructure->alias =;
     }
 
     /**
