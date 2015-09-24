@@ -11,7 +11,7 @@
                         <a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss></a>
                     </div>
 
-                    <h2 class="panel-title">Edit {{ @$structure['lang']['name'] }} {{ Session::get('message') }}</h2>
+                    <h2 class="panel-title">Edit {{ @$structure['lang']['name'] }} </h2>
                 </header>
                 <div class="panel-body">
 

@@ -17,12 +17,11 @@
 
     <!-- Head Libs -->
     <script src="/assets/cms/vendor/modernizr/modernizr.js"></script>
+
 </head>
 
 <body >
 <section class="body" onload="{!! @$onLoad !!}" >
-
-
     <!-- start: header -->
         @include('administration::layout.header')
     <!-- end: header -->
@@ -63,7 +62,11 @@
         @include('administration::layout.sidebar_right')
     <!-- end: sidebar-right -->
     @include('administration::layout.scripts')
-
+    <script>
+        $(document).ready(function(){
+            {!! @$onLoad !!}
+        });
+    </script>
 
 </section>
 </body>

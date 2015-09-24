@@ -44,8 +44,15 @@ class StructureController extends BaseController
 
         if(\Session::has('message')){
 
-            view()->share('onLoad','Main.showMessage("'.(\Session::get('message')).'","'.\Session::get('title').'","'.\Session::get('type').'")');
+            $message = \Session::pull('message');
+           // \Session::forget('message');
+           //dd($message);
+
+            $onLoad = "new PNotify({title:'".$message['title']."',text:'".$message['message']."',type:'".$message['type']."'});";
+            view()->share("onLoad",$onLoad);
+            //view()->share("onLoad","Main.showMessage('".$message['message']."','".$message['title']."','".$message['message']."')");
         }
+
         view()->share('listStructures',$list);
     }
 
@@ -155,15 +162,14 @@ class StructureController extends BaseController
             'language_id'=>$data['language_id'],
             'description'=>$data['description']
         ]);
-        $message = [
-            'type'=>'succes',
-            'title'=> 'Saved',
-            'message'=>'Structure was saved'
-        ];
-        \Session::flash('message','Structure was saved');
-        \Session::flash('title','Saved');
-        \Session::flash('type','succes');
-        return redirect(action('\Administration\Http\Controllers\StructureController@edit',['id'=>$structure->id]));
+
+        \Session::put('message.type','success');
+        \Session::put('message.title','Saved');
+        \Session::put('message.message','Structure was saved');
+
+
+        \Log::error('$structure->id ',[$structure->id]);
+        return ['redirect'=>action('\Administration\Http\Controllers\StructureController@edit',['id'=>$structure->id])];
     }
 
     /**
