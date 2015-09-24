@@ -20,7 +20,7 @@
 </head>
 
 <body >
-<section class="body" >
+<section class="body" onload="{!! @$onLoad !!}" >
 
 
     <!-- start: header -->

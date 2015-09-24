@@ -11,9 +11,10 @@
                         <a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss></a>
                     </div>
 
-                    <h2 class="panel-title">Edit {{ @$structure['lang']['name'] }}</h2>
+                    <h2 class="panel-title">Edit {{ @$structure['lang']['name'] }} {{ Session::get('message') }}</h2>
                 </header>
                 <div class="panel-body">
+
                     {!! Form::open(['method'=>'PATCH','class'=>'form-horizontal form-bordered','url'=>action('\Administration\Http\Controllers\StructureController@update',['id'=>@$structure['id']])]) !!}
                     @include('administration::structure.form')
                     {!! Form::close() !!}

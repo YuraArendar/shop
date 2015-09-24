@@ -6,7 +6,6 @@
 <script src="/assets/cms/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
 <script src="/assets/cms/vendor/magnific-popup/magnific-popup.js"></script>
 <script src="/assets/cms/vendor/jquery-placeholder/jquery.placeholder.js"></script>
-<script src="/assets/cms/vendor/magnific-popup/jquery.magnific-popup.js"></script>
 <script src="/assets/cms/vendor/pnotify/pnotify.custom.js"></script>
 
 <script src="/assets/cms/javascripts/core.js"></script>

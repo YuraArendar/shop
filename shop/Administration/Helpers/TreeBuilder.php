@@ -59,7 +59,6 @@ class TreeBuilder{
             ];
         }
          $this->buildRelations($items);
-        \Log::info('items = ',$this->relations);
         return $this->relations;
     }
 

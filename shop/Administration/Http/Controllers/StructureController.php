@@ -19,7 +19,9 @@ class StructureController extends BaseController
     public function __construct(Request $request){
         parent::__construct();
 
-
+        $this->validation = \Validator::make($request->all(), [
+            'name' => 'required:structure|max:255',
+        ]);
 
 
         view()->share('partition','Structure');
@@ -40,6 +42,10 @@ class StructureController extends BaseController
             $list[$struct['id']] = $struct['name'];
         }
 
+        if(\Session::has('message')){
+
+            view()->share('onLoad','Main.showMessage("'.(\Session::get('message')).'","'.\Session::get('title').'","'.\Session::get('type').'")');
+        }
         view()->share('listStructures',$list);
     }
 
@@ -115,7 +121,6 @@ class StructureController extends BaseController
     public function create()
     {
         return view('administration::structure.create');
-
     }
 
     /**
@@ -126,6 +131,15 @@ class StructureController extends BaseController
      */
     public function store(Request $request)
     {
+        $this->validation->mergeRules('alias',[
+            'required',
+            'regex:/^[a-zа-я\d-]+$/',
+            'unique:structure',
+            'max:255']
+        );
+        if($this->validation->fails()){
+            return $this->validation->errors()->toJson();
+        }
         $structure =  new Structure();
 
         $data = $request->all();
@@ -135,14 +149,21 @@ class StructureController extends BaseController
         $structure->controller = $data['controller'];
 
 
-        $id = $structure->save();
+        $structure->save();
         $structure->structureLang()->create([
             'name'=>$data['name'],
             'language_id'=>$data['language_id'],
             'description'=>$data['description']
         ]);
-
-        return redirect(action('\Administration\Http\Controllers\StructureController@edit',['id'=>$structure->id]))->withInput();
+        $message = [
+            'type'=>'succes',
+            'title'=> 'Saved',
+            'message'=>'Structure was saved'
+        ];
+        \Session::flash('message','Structure was saved');
+        \Session::flash('title','Saved');
+        \Session::flash('type','succes');
+        return redirect(action('\Administration\Http\Controllers\StructureController@edit',['id'=>$structure->id]));
     }
 
     /**
@@ -185,9 +206,11 @@ class StructureController extends BaseController
      */
     public function update(Request $request, $id)
     {
-        $this->validation = Validator::make($request->all(), [
-            'alias' => 'required|unique:structure|max:255',
-        ]);
+
+        $this->validation->mergeRules('alias','required|regex:[a-zа-я-\d]+|max:255');
+        if($this->validation->fails()){
+            return $this->validation->errors()->toJson();
+        }
         $objectStructure = Structure::find($id);
 
         $data = $request->all();
@@ -204,14 +227,9 @@ class StructureController extends BaseController
 
         $objectStructure->save();
         $langStructure->save();
-        if($this->validation->fails()){
-            return $this->validation->errors();
-        }else{
-            return $this->validation->errors();
-        }
-        //return redirect()->back()->withInput();
-       // dd($data);
-        //$objectStructure->alias =;
+
+
+        return redirect()->back()->withInput();
     }
 
     /**
