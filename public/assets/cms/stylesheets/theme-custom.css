@@ -6,3 +6,6 @@ a.on-default.edit-row{
 span.edit-buttons{
     margin: 6px 15px;
 }
+.error{
+    display: none;
+}

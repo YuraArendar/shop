@@ -12,7 +12,8 @@ class Structure extends Node
     protected $fillable =[
         'alias',
         'parent_id',
-        'controller'
+        'controller',
+        'position'
     ];
 
     public function structureLang(){

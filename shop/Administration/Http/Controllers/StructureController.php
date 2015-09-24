@@ -64,7 +64,7 @@ class StructureController extends BaseController
     public function index()
     {
         $build = new TreeBuilder();
-        $structures = Structure::get();
+        $structures = Structure::get()->sortBy('position');
 
         foreach ($structures as $key=>$struct) {
             $lang = StructureLang::where(['structure_id'=>$struct['id'],'language_id'=>\LaravelLocalization::getCurrentLocale()])->first();
@@ -112,6 +112,7 @@ class StructureController extends BaseController
         foreach($newRelations as $item){
             $struct = Structure::find($item['id']);
             $struct->parent_id = $item['parent_id'];
+            $struct->position = $item['position'];
             $struct->save();
         }
 

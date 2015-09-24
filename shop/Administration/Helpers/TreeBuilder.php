@@ -52,11 +52,14 @@ class TreeBuilder{
 
     public function generateRelations($items =  array()){
 
+        $i=1;
         foreach($items as $item){
             $this->relations[] = [
                 'id' => $item['id'],
-                'parent_id' => NULL
+                'parent_id' => NULL,
+                'position' => $i
             ];
+            $i++;
         }
          $this->buildRelations($items);
         return $this->relations;
@@ -67,12 +70,14 @@ class TreeBuilder{
 
 
             if(isset($item['children'])){
-
+                $i=1;
                 foreach($item['children'] as $child){
                     $this->relations[] = [
                         'id' => $child['id'],
-                        'parent_id' => $item['id']
+                        'parent_id' => $item['id'],
+                        'position' => $i
                     ];
+                    $i++;
                 }
                 $this->buildRelations($item['children']);
             }
