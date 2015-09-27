@@ -33,7 +33,7 @@
         {!! Form::label('description','',['class'=>'error','id'=>'description-error']) !!}
     </div>
 </div>
-{!! Form::input('hidden','success',0,['id'=>'success-input']) !!}
+
 <div class="form-group">
     <div class="col-md-12">
         {!! Form::submit('Submit',['class'=>'btn btn-primary pull-right']) !!}

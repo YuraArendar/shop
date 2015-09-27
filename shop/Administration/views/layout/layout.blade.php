@@ -5,7 +5,7 @@
     <!-- Basic -->
     <meta charset="UTF-8">
     <meta http-equiv="Content-Language" content="{{ LaravelLocalization::getCurrentLocale() }}">
-    <title>Default Layout | Porto Admin - Responsive HTML5 Template 1.4.1</title>
+    <title>{{ @$title }}</title>
     <meta name="keywords" content="HTML5 Admin Template" />
     <meta name="description" content="Porto Admin - Responsive HTML5 Template">
     <meta name="author" content="okler.net">
@@ -53,9 +53,27 @@
             @include('administration::layout.inc.lang_filelds')
 
             <!-- start: page -->
-            <a class="mb-xs mt-xs mr-xs modal-basic btn btn-default" href="#modalIcon">Basic</a>
 
-                @yield('content')
+            <div class="row">
+                <div class="col-lg-12">
+                    <section class="panel">
+                        <header class="panel-heading">
+
+                            <div class="panel-actions">
+                                <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
+                                <a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss></a>
+                            </div>
+
+                            <h2 class="panel-title"> {{ @$title }} </h2>
+                        </header>
+                        <div class="panel-body">
+                            @yield('content')
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+
 
             <!-- end: page -->
         </section>

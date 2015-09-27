@@ -27,6 +27,7 @@ class StructureController extends BaseController
 
 
         view()->share('partition','Structure');
+        view()->share('title','Structure');
         $structures = Structure::all()->toArray();
         foreach ($structures as $key=>$struct) {
             $lang = StructureLang::where(['structure_id'=>$struct['id'],'language_id'=>\Lang::getLocale()])->first();
@@ -90,6 +91,8 @@ class StructureController extends BaseController
             '<script src="/assets/cms/vendor/ios7-switch/ios7-switch.js"></script>',
         ]);
 
+        view()->share('title','Structures list');
+
         return view('administration::structure.index',compact('view'));
     }
 
@@ -119,6 +122,7 @@ class StructureController extends BaseController
      */
     public function create()
     {
+        view()->share('title','Create new Structure');
         return view('administration::structure.create');
     }
 
@@ -191,7 +195,7 @@ class StructureController extends BaseController
             ->toArray();
 
         $structure['lang'] = $lang;
-
+        view()->share('title','Edit structure '.$structure['lang']['name']);
         return view('administration::structure.edit',compact('structure'));
     }
 
