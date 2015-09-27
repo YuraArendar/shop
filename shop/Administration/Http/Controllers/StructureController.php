@@ -212,15 +212,22 @@ class StructureController extends BaseController
         $objectStructure->alias = $data['alias'];
         $objectStructure->parent_id = $data['parent_id'];
         $objectStructure->controller = $data['controller'];
-
+        $objectStructure->save();
         $langStructure =  $this->langModel->where('structure_id',$id)
             ->where('language_id',\LaravelLocalization::getCurrentLocale())
             ->first();
-        $langStructure->name = $data['name'];
-        $langStructure->description = $data['description'];
-
-        $objectStructure->save();
-        $langStructure->save();
+        if($langStructure){
+            $langStructure->name = $data['name'];
+            $langStructure->description = $data['description'];
+            $langStructure->save();
+        }else{
+            $langStructure =  new StructureLang();
+            $langStructure->structure_id = $objectStructure->id;
+            $langStructure->language_id = \LaravelLocalization::getCurrentLocale();
+            $langStructure->name = $data['name'];
+            $langStructure->description = $data['description'];
+            $langStructure->save();
+        }
 
         return ['message'=>[
             'title'=>'Saved',
