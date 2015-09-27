@@ -7,13 +7,11 @@ $(document).ready(function(){
 
             var token = $('meta[name="csrf_token"]').attr('content');
 
-            console.log('id : '+id);
             $.ajax({
-                url: location.href+'/'+id,
+                url: location.href+'/delete/'+id,
                 method:"POST",
                 data: {
-                    _token : token,
-                    _method : "DELETE"
+                    _token : token
                 },
                 success: function (res) {
                     if(res['status']=='ok')
@@ -29,9 +27,27 @@ $(document).ready(function(){
     });
 
     $('.check-active').click(function (){
+        var token = $('meta[name="csrf_token"]').attr('content');
+        var id = $($(this).closest(".dd-item")).attr("data-id");
+        var active = 1;
+        if($(this).children('.ios-switch').hasClass('off'))
+            active = 0;
+        $.ajax({
+            url: location.href+'/active/'+id,
+            method:"POST",
+            data: {
+                _token : token,
+                active: active
+            },
+            success: function (res) {
 
-        console.log(location.href);
+            }
+
+        });
+
     });
+
+
 
 
 });

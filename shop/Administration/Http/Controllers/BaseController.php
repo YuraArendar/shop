@@ -3,6 +3,7 @@ namespace Administration\Http\Controllers;
 
 use Administration\Widgets\Menu\WidgetMenu;
 use shop\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use shop\Language;
 
 class BaseController extends Controller{
@@ -41,7 +42,7 @@ class BaseController extends Controller{
      * @param  int  $id
      * @return Response
      */
-    public function destroy($id)
+    public function postDelete($id)
     {
         $item = $this->currentModel->find($id);
 
@@ -53,6 +54,19 @@ class BaseController extends Controller{
         \Session::put('message.type','success');
         \Session::put('message.title','Deleted');
         \Session::put('message.message','Structure was deleted');
+
+        return ['status'=>'ok'] ;
+    }
+
+    /**
+     * change status published of item
+     * @param int $id
+     * @return Response
+     */
+    public function postActive(Request $request,$id){
+        $item = $this->currentModel->find($id);
+        $item->published = $request->input('active');
+        $item->save();
 
         return ['status'=>'ok'] ;
     }

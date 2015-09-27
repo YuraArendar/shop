@@ -53,7 +53,7 @@ class StructureController extends BaseController
      *
      * @return Response
      */
-    public function index()
+    public function getIndex()
     {
         $build = new TreeBuilder();
         $structures = Structure::get()->sortBy('position');
@@ -62,7 +62,7 @@ class StructureController extends BaseController
             $lang = StructureLang::where(['structure_id'=>$struct['id'],'language_id'=>\LaravelLocalization::getCurrentLocale()])->first();
             if($lang){
                 $structures[$key]->name = $lang->name;
-                $structures[$key]->link = action('\Administration\Http\Controllers\StructureController@edit',['id'=>$struct['id']]);
+                $structures[$key]->link = action('\Administration\Http\Controllers\StructureController@getEdit',['id'=>$struct['id']]);
             }else{
                 unset($structures[$key]);
             }
@@ -96,7 +96,7 @@ class StructureController extends BaseController
         return view('administration::structure.index',compact('view'));
     }
 
-    public function rebuild(Request $request){
+    public function postRebuild(Request $request){
 
         $build = new TreeBuilder();
 
@@ -120,7 +120,7 @@ class StructureController extends BaseController
      *
      * @return Response
      */
-    public function create()
+    public function getCreate()
     {
         view()->share('title','Create new Structure');
         return view('administration::structure.create');
@@ -132,7 +132,7 @@ class StructureController extends BaseController
      * @param  Request  $request
      * @return Response
      */
-    public function store(Request $request)
+    public function postStore(Request $request)
     {
         $this->validation->mergeRules('alias',[
             'required',
@@ -165,18 +165,7 @@ class StructureController extends BaseController
 
 
         \Log::error('$structure->id ',[$structure->id]);
-        return ['redirect'=>action('\Administration\Http\Controllers\StructureController@edit',['id'=>$structure->id])];
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function show($id)
-    {
-        //
+        return ['redirect'=>action('\Administration\Http\Controllers\StructureController@getEdit',['id'=>$structure->id])];
     }
 
     /**
@@ -185,7 +174,7 @@ class StructureController extends BaseController
      * @param  int  $id
      * @return Response
      */
-    public function edit($id)
+    public function getEdit($id)
     {
         $structure = Structure::with('structureLang')->find($id)->toArray();
 
@@ -206,9 +195,9 @@ class StructureController extends BaseController
      * @param  int  $id
      * @return Response
      */
-    public function update(Request $request, $id)
+    public function postUpdate(Request $request, $id)
     {
-
+       // parent::update($request, $id);
         $this->validation->mergeRules('alias',['required',
             'regex:/[a-zа-я-\d]+/',
             'max:255'

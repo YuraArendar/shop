@@ -7,7 +7,7 @@
     'method'=>'PATCH',
     'class'=>'form-horizontal form-bordered',
     'onsubmit'=>'return Main.submitForm(this)',
-    'url'=>action('\Administration\Http\Controllers\StructureController@update',
+    'url'=>action('\Administration\Http\Controllers\StructureController@postUpdate',
     ['id'=>@$structure['id']])
     ]) !!}
 

@@ -24,16 +24,12 @@ var Main = {
 	},
 
 	submitForm:function(form){
-
-		console.log(form);
-
 		$.ajax({
 			url: $(form).attr('action'),
 			method:"POST",
 			data: $(form).serialize(),
 			dataType:"json",
 			success: function (res) {
-				console.log(res);
 				if(typeof res['redirect'] !=='undefined')
 					window.location.href =  res['redirect'];
 				if(typeof res['message'] !=='undefined')
@@ -60,7 +56,6 @@ var Main = {
 				modal:true
 			}
 		});
-		console.log(func);
 		$(selector).find('.modal-confirm').on('click', function (e) {
 			e.preventDefault();
 			$.magnificPopup.close();

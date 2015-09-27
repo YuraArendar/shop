@@ -4,7 +4,7 @@
 
     <div class="col-sm-6">
         <div class="mb-md">
-            {!! link_to_action('\Administration\Http\Controllers\StructureController@create',"Add",array(),['class'=>'btn btn-primary']) !!}
+            {!! link_to_action('\Administration\Http\Controllers\StructureController@getCreate',"Add",array(),['class'=>'btn btn-primary']) !!}
 
         </div>
     </div>
