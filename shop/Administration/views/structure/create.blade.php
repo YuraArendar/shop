@@ -14,7 +14,12 @@
                     <h2 class="panel-title">Add new structure</h2>
                 </header>
                 <div class="panel-body">
-                    {!! Form::open(['method'=>'POST','class'=>'form-horizontal form-bordered','url'=>action('\Administration\Http\Controllers\StructureController@store')]) !!}
+                    {!! Form::open([
+                    'method'=>'POST',
+                    'class'=>'form-horizontal form-bordered',
+                    'onsubmit'=>'return Main.submitForm(this)',
+                    'url'=>action('\Administration\Http\Controllers\StructureController@store')
+                    ]) !!}
                         @include('administration::structure.form')
                     {!! Form::close() !!}
 
