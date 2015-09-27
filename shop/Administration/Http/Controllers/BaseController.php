@@ -14,6 +14,11 @@ class BaseController extends Controller{
     public $dataView = [];
 
 
+    /**
+     * the object of current model
+     * @var
+     */
+    public $currentModel ;
 
     public function __construct(){
 
@@ -22,8 +27,34 @@ class BaseController extends Controller{
         view()->share('locales',\LaravelLocalization::getSupportedLocales());
         view()->share('menu',$widgetMenu->view());
 
-        //view()->share('csrf_token',csrf_token());
+        if(\Session::has('message')){
+            $message = \Session::pull('message');
+            $onLoad = "new PNotify({title:'".$message['title']."',text:'".$message['message']."',type:'".$message['type']."'});";
+            view()->share("onLoad",$onLoad);
+        }
 
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function destroy($id)
+    {
+        $item = $this->currentModel->find($id);
+
+        if(isset($item->parent_id)){
+            $this->currentModel->where(['parent_id'=>$id])->delete();
+        }
+        $item->delete();
+
+        \Session::put('message.type','success');
+        \Session::put('message.title','Deleted');
+        \Session::put('message.message','Structure was deleted');
+
+        return ['status'=>'ok'] ;
     }
 
 

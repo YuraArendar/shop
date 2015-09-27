@@ -17,11 +17,16 @@
 <!-- Theme Custom -->
 <script src="/assets/cms/javascripts/theme.custom.js"></script>
 
-<!-- Theme Initialization Files -->
-<script src="/assets/cms/javascripts/theme.init.js"></script>
 
 @if(isset($scripts) && !empty($scripts))
     @foreach($scripts as $script)
         {!! $script !!}
     @endforeach
 @endif
+
+
+
+<!-- Theme Initialization Files -->
+<script src="/assets/cms/javascripts/theme.init.js"></script>
+
+<script src="/assets/cms/javascripts/ui-elements/examples.modals.js"></script>

@@ -10,6 +10,7 @@ var Main = {
 			$(this).next('.error').html('').hide();
 			$($(this).closest(".form-group")).removeClass("has-error");
 		});
+
 	},
 
 
@@ -26,24 +27,17 @@ var Main = {
 
 		console.log(form);
 
-		return false;
-	}
-}
-
-$(document).ready(function(){
-	Main.init();
-
-	$('form').submit(function(){
-
 		$.ajax({
-			url: $(this).attr('action'),
+			url: $(form).attr('action'),
 			method:"POST",
-			data: $(this).serialize(),
+			data: $(form).serialize(),
 			dataType:"json",
 			success: function (res) {
 				console.log(res);
 				if(typeof res['redirect'] !=='undefined')
 					window.location.href =  res['redirect'];
+				if(typeof res['message'] !=='undefined')
+					Main.showMessage(res['message']['message'],res['message']['title'],res['message']['type']);
 				$.each(res,function(i,value){
 					var el = $('#'+i+'-error');
 					el.show();
@@ -54,17 +48,29 @@ $(document).ready(function(){
 			}
 		});
 		return false;
+	},
+	// Вывод диалога подтверждения и вызов фунции если есть при подтверждении
+	showDialog: function(selector,title,text,func){
+		($(selector).find('.panel-title')).html(title);
+		($(selector).find('.modal-text')).html(text);
+		$.magnificPopup.open({
+			items: {
+				src: selector,
+				type: 'inline',
+				modal:true
+			}
+		});
+		console.log(func);
+		$(selector).find('.modal-confirm').on('click', function (e) {
+			e.preventDefault();
+			$.magnificPopup.close();
+			if(typeof func !=='undefined')
+				func();
+		});
 
+	}
+}
 
-
-
-
-		//return false;
-		if($('#success-input').val() == 1){
-			return true;
-		}else{
-			return false;
-		}
-
-	});
+$(document).ready(function(){
+	Main.init();
 });

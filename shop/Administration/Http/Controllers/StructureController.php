@@ -16,9 +16,11 @@ class StructureController extends BaseController
 
     protected $validation;
 
+
     public function __construct(Request $request){
         parent::__construct();
 
+        $this->currentModel = new Structure();
         $this->validation = \Validator::make($request->all(), [
             'name' => 'required:structure|max:255',
         ]);
@@ -40,17 +42,6 @@ class StructureController extends BaseController
         ];
         foreach($structures as $struct){
             $list[$struct['id']] = $struct['name'];
-        }
-
-        if(\Session::has('message')){
-
-            $message = \Session::pull('message');
-           // \Session::forget('message');
-           //dd($message);
-
-            $onLoad = "new PNotify({title:'".$message['title']."',text:'".$message['message']."',type:'".$message['type']."'});";
-            view()->share("onLoad",$onLoad);
-            //view()->share("onLoad","Main.showMessage('".$message['message']."','".$message['title']."','".$message['message']."')");
         }
 
         view()->share('listStructures',$list);
@@ -80,23 +71,23 @@ class StructureController extends BaseController
         $structures->linkNodes();
 
         $str =  $structures->toArray();
+        $activeTemplate =  '<span class="switch switch-sm switch-primary check-active pull-right">'.
+            '<input type="checkbox"  name="switch" data-plugin-ios-switch {cheked} /></span>';
         $editTemplate = '<span class="edit-buttons pull-right">'.
-            '<a href="{link}" style="z-index: 10000;" class="on-default edit-row"><i class="fa fa-pencil"></i></a>'.
-            '<a href="#" class="on-default remove-row"><i class="fa fa-trash-o"></i></a></span>';
+            '<a href="{link}" class="on-default edit-row"><i class="fa fa-pencil"></i></a>'.
+            '<a href="#modalBasic" class="on-default remove-row"><i class="fa fa-trash-o"></i></a></span>';
         $view = $build->view(
             $str,
             '<ol class="dd-list">{val}</ol>',
-            '<li class="dd-item" data-id="{id}">'.$editTemplate.'<div class="dd-handle">{name}</div></li>',
-            '<li class="dd-item" data-id="{id}">'.$editTemplate.'<div class="dd-handle">{name}</div><ol class="dd-list">{|}</ol></li>'
+            '<li class="dd-item" data-id="{id}">'.$activeTemplate.$editTemplate.'<div class="dd-handle">{name}</div></li>',
+            '<li class="dd-item" data-id="{id}">'.$activeTemplate.$editTemplate.'<div class="dd-handle">{name}</div><ol class="dd-list">{|}</ol></li>'
             );
-
-        $structures = Structure::all()->toArray();
-
 
 
         view()->share('scripts', [
             '<script src="/assets/cms/vendor/jquery-nestable/jquery.nestable.js"></script>',
-            '<script src="/assets/cms/javascripts/ui-elements/examples.nestable.js"></script>'
+            '<script src="/assets/cms/javascripts/ui-elements/examples.nestable.js"></script>',
+            '<script src="/assets/cms/vendor/ios7-switch/ios7-switch.js"></script>',
         ]);
 
         return view('administration::structure.index',compact('view'));
@@ -214,7 +205,10 @@ class StructureController extends BaseController
     public function update(Request $request, $id)
     {
 
-        $this->validation->mergeRules('alias','required|regex:[a-zа-я-\d]+|max:255');
+        $this->validation->mergeRules('alias',['required',
+            'regex:/[a-zа-я-\d]+/',
+            'max:255'
+        ]);
         if($this->validation->fails()){
             return $this->validation->errors()->toJson();
         }
@@ -236,26 +230,12 @@ class StructureController extends BaseController
         $langStructure->save();
 
 
-        return redirect()->back()->withInput();
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function destroy($id)
-    {
-        Structure::where(['parent_id'=>$id])->delete();
-        $struct = Structure::find($id);
-        $struct->delete();
-        $message = [
-            'type'=>'succes',
-            'title'=> 'Deleted',
-            'message'=>'Structure was deleted'
-        ];
-        return $message ;
+        return ['message'=>[
+            'title'=>'Saved',
+            'type' => 'success',
+            'message'=>'Structure was saved'
+        ]];
     }
 
 }

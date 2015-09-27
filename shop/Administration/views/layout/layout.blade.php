@@ -25,7 +25,9 @@
     <!-- start: header -->
         @include('administration::layout.header')
     <!-- end: header -->
-
+    <!-- modal dialog templates:  -->
+    @include('administration::layout.inc.modals')
+    <!-- end:modal dialog templates  -->
     <div class="inner-wrapper">
 
         {!! $menu !!}
@@ -51,6 +53,7 @@
             @include('administration::layout.inc.lang_filelds')
 
             <!-- start: page -->
+            <a class="mb-xs mt-xs mr-xs modal-basic btn btn-default" href="#modalIcon">Basic</a>
 
                 @yield('content')
 
