@@ -12,3 +12,6 @@ span.edit-buttons{
 .check-active{
     margin: 4px 7px auto auto;
 }
+.select-language{
+    width: auto !important;
+}

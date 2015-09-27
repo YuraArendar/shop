@@ -6,7 +6,6 @@ use Administration\Helpers\TreeBuilder;
 use Illuminate\Http\Request;
 
 use shop\Http\Requests;
-use shop\Http\Controllers\Controller;
 use shop\Structure;
 use shop\StructureLang;
 
@@ -21,6 +20,7 @@ class StructureController extends BaseController
         parent::__construct();
 
         $this->currentModel = new Structure();
+        $this->langModel =  new StructureLang();
         $this->validation = \Validator::make($request->all(), [
             'name' => 'required:structure|max:255',
         ]);
@@ -28,9 +28,9 @@ class StructureController extends BaseController
 
         view()->share('partition','Structure');
         view()->share('title','Structure');
-        $structures = Structure::all()->toArray();
+        $structures = $this->currentModel->all()->toArray();
         foreach ($structures as $key=>$struct) {
-            $lang = StructureLang::where(['structure_id'=>$struct['id'],'language_id'=>\Lang::getLocale()])->first();
+            $lang = $this->langModel->where(['structure_id'=>$struct['id'],'language_id'=>\Lang::getLocale()])->first();
             if($lang){
                 $structures[$key]['name'] = $lang->name;
             }else{
@@ -56,10 +56,10 @@ class StructureController extends BaseController
     public function getIndex()
     {
         $build = new TreeBuilder();
-        $structures = Structure::get()->sortBy('position');
+        $structures = $this->currentModel->get()->sortBy('position');
 
         foreach ($structures as $key=>$struct) {
-            $lang = StructureLang::where(['structure_id'=>$struct['id'],'language_id'=>\LaravelLocalization::getCurrentLocale()])->first();
+            $lang = $this->langModel->where(['structure_id'=>$struct['id'],'language_id'=>\LaravelLocalization::getCurrentLocale()])->first();
             if($lang){
                 $structures[$key]->name = $lang->name;
                 $structures[$key]->link = action('\Administration\Http\Controllers\StructureController@getEdit',['id'=>$struct['id']]);
@@ -104,7 +104,7 @@ class StructureController extends BaseController
 
         $newRelations = $build->generateRelations($data);
         foreach($newRelations as $item){
-            $struct = Structure::find($item['id']);
+            $struct = $this->currentModel->find($item['id']);
             $struct->parent_id = $item['parent_id'];
             $struct->position = $item['position'];
             $struct->save();
@@ -176,12 +176,13 @@ class StructureController extends BaseController
      */
     public function getEdit($id)
     {
-        $structure = Structure::with('structureLang')->find($id)->toArray();
+        $structure = $this->currentModel->with('structureLang')->find($id)->toArray();
 
-        $lang = StructureLang::where('structure_id',$id)
+        $lang = $this->langModel->where('structure_id',$id)
             ->where('language_id',\LaravelLocalization::getCurrentLocale())
-            ->first()
-            ->toArray();
+            ->first();
+        if($lang)
+            $lang->toArray();
 
         $structure['lang'] = $lang;
         view()->share('title','Edit structure '.$structure['lang']['name']);
@@ -197,7 +198,6 @@ class StructureController extends BaseController
      */
     public function postUpdate(Request $request, $id)
     {
-       // parent::update($request, $id);
         $this->validation->mergeRules('alias',['required',
             'regex:/[a-zа-я-\d]+/',
             'max:255'
@@ -205,7 +205,7 @@ class StructureController extends BaseController
         if($this->validation->fails()){
             return $this->validation->errors()->toJson();
         }
-        $objectStructure = Structure::find($id);
+        $objectStructure = $this->currentModel->find($id);
 
         $data = $request->all();
 
@@ -213,7 +213,7 @@ class StructureController extends BaseController
         $objectStructure->parent_id = $data['parent_id'];
         $objectStructure->controller = $data['controller'];
 
-        $langStructure =  StructureLang::where('structure_id',$id)
+        $langStructure =  $this->langModel->where('structure_id',$id)
             ->where('language_id',\LaravelLocalization::getCurrentLocale())
             ->first();
         $langStructure->name = $data['name'];
@@ -221,8 +221,6 @@ class StructureController extends BaseController
 
         $objectStructure->save();
         $langStructure->save();
-
-
 
         return ['message'=>[
             'title'=>'Saved',

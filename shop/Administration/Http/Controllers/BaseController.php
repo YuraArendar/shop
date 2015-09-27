@@ -21,6 +21,12 @@ class BaseController extends Controller{
      */
     public $currentModel ;
 
+    /**
+     * the object of Language Model
+     * @var
+     */
+    public $langModel;
+
     public function __construct(){
 
         $widgetMenu = new WidgetMenu();

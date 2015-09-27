@@ -50,7 +50,6 @@
                     <a class="sidebar-right-toggle" data-open="sidebar-right"><i class="fa fa-chevron-left"></i></a>
                 </div>
             </header>
-            @include('administration::layout.inc.lang_filelds')
 
             <!-- start: page -->
 
@@ -60,8 +59,7 @@
                         <header class="panel-heading">
 
                             <div class="panel-actions">
-                                <a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
-                                <a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss></a>
+                                @include('administration::layout.inc.lang_filelds')
                             </div>
 
                             <h2 class="panel-title"> {{ @$title }} </h2>
