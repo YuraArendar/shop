@@ -15,6 +15,8 @@ class CreateStructureTable extends Migration
     {
         Schema::create('structure', function(Blueprint $table) {
             $table->increments('id');
+            $table->boolean('published')->default(true);
+            $table->dropColumn('position');
             $table->string('alias');
             Nestedset\NestedSet::columns($table);
             $table->string('controller');
